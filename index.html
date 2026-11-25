@@ -29,12 +29,12 @@
   <p class="no" id="no"></p>
 </form>
 <script>
-  const DATA = { salt: "N+FsYHlzZWeXwopFnv6P9Q==", iv: "DIzfEYNrXjV1EkoY", file: "papers.bin" };
+  const DATA = { salt: "I1TBBhmOBEluaL1Y8/okgw==", iv: "Q3skDngBWBCMrAA/", file: "papers.bin" };
   const bytes = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
   document.getElementById('gate').addEventListener('submit', async (e) => {
     e.preventDefault();
     const no = document.getElementById('no');
-    no.textContent = 'Opening\u2026';
+    no.textContent = 'Opening\u2026 this takes a few seconds';
     try {
       const enc = new TextEncoder();
       const base = await crypto.subtle.importKey('raw', enc.encode(document.getElementById('pw').value), 'PBKDF2', false, ['deriveKey']);
