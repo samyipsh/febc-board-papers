@@ -13,8 +13,17 @@
   h1 { font-family: Georgia, "Times New Roman", serif; font-size: 1.3rem; margin: 0 0 4px; }
   p { margin: 0 0 16px; color: #5b6168; font-size: 0.92rem; }
   label { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: #5b6168; font-weight: 600; }
-  input { display: block; width: 100%; box-sizing: border-box; margin: 5px 0 12px; padding: 9px 11px; font: inherit;
+  .pw { position: relative; margin: 5px 0 12px; }
+  input { display: block; width: 100%; box-sizing: border-box; padding: 9px 40px 9px 11px; font: inherit;
     border: 1px solid #ddd8cf; border-radius: 6px; background: #fff; }
+  .eye { position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+    width: 30px; height: 30px; padding: 0; display: grid; place-items: center;
+    border: 0; border-radius: 6px; background: none; color: #5b6168; cursor: pointer; }
+  .eye:hover { background: #f2efe9; }
+  .eye svg { width: 18px; height: 18px; display: block; }
+  .eye .off { display: none; }
+  .eye[aria-pressed="true"] .on { display: none; }
+  .eye[aria-pressed="true"] .off { display: block; }
   button { font: inherit; padding: 9px 16px; border: 0; border-radius: 6px; background: #1d2024; color: #fff; cursor: pointer; }
   .no { color: #a1341f; font-size: 0.88rem; min-height: 1.3em; margin: 10px 0 0; }
 </style>
@@ -24,12 +33,29 @@
   <h1>Far Eastern Bible College</h1>
   <p>Board papers for 26 November 2026. Enter the password you were given.</p>
   <label for="pw">Password</label>
-  <input id="pw" type="password" autocomplete="current-password" autofocus>
+  <div class="pw">
+    <input id="pw" type="password" autocomplete="current-password" autofocus>
+    <button type="button" class="eye" id="eye" aria-pressed="false" aria-label="Show password" title="Show password">
+      <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.7 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a18.5 18.5 0 0 1-2.4 3.4M6.6 6.6A18.4 18.4 0 0 0 2 12s3.6 7 10 7a10.3 10.3 0 0 0 4.3-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="m2 2 20 20"/></svg>
+    </button>
+  </div>
   <button type="submit">Open</button>
   <p class="no" id="no"></p>
 </form>
 <script>
-  const DATA = { salt: "I1TBBhmOBEluaL1Y8/okgw==", iv: "Q3skDngBWBCMrAA/", file: "papers.bin" };
+  const eye = document.getElementById('eye');
+  eye.addEventListener('click', () => {
+    const field = document.getElementById('pw');
+    const shown = eye.getAttribute('aria-pressed') === 'true';
+    eye.setAttribute('aria-pressed', String(!shown));
+    const label = shown ? 'Show password' : 'Hide password';
+    eye.setAttribute('aria-label', label);
+    eye.title = label;
+    field.type = shown ? 'password' : 'text';
+    field.focus();
+  });
+  const DATA = { salt: "0m4ZexKweFeu2LpoN43ppQ==", iv: "gabpd9S4lYutGKb9", file: "papers.bin" };
   const bytes = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
   document.getElementById('gate').addEventListener('submit', async (e) => {
     e.preventDefault();
